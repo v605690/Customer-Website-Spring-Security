@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Repository</title>
+</head>
+<body>
+<div align="center">
+    <h1>Book List</h1>
+
+    <a th:href="@{/new-book}">Add New Book</a>
+    <a th:href="@{/}">Customer List</a>
+
+    <br/><br/>
+
+    <table border="1" cellpadding="10">
+        <thead>
+        <tr>
+
+            <th>Book ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>isbn</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${bookList}">
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.isbn}"></td>
+            // Not sure how to interpret below
+            <td th:text="${book.customer != null} ? ${book.customer.fullName}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
