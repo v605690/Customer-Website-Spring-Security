@@ -1,7 +1,9 @@
 package com.crus.customerWebsite.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @AllArgsConstructor
@@ -10,7 +12,7 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class Customer {
+public class Customer implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +25,21 @@ public class Customer {
     @OneToOne(mappedBy = "customer")
     private Book book;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Roles role;
+
+    public Customer(Customer.Roles role) {
+        this.role = role;
+    }
+
+    @JsonIgnore
+    public String getAuthority() {
+        return role.name();
+    }
+
+    public enum Roles {
+        ROLE_USER,
+        ROLE_ADMIN
+    }
 }

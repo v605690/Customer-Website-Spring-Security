@@ -18,11 +18,19 @@ public class CustomerController {
 
     @GetMapping("/")
     public String ViewHomePage(Model model) {
-        final List<Customer> customerList = customerService.getAllCustomers();
+//        final List<Customer> customerList = customerService.getAllCustomers();
+//
+//        model.addAttribute("customerList", customerList);
 
+        return "customer-list";
+    }
+
+    @GetMapping("/customer-list")
+    public String showAdminPage(Model model) {
+        final List<Customer> customerList = customerService.getAllCustomers();
         model.addAttribute("customerList", customerList);
 
-        return "index";
+        return "customer-list";
     }
 
     @GetMapping("/new")
