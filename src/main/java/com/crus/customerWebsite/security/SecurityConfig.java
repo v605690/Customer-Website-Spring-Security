@@ -9,9 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static javax.management.Query.and;
-import static org.springframework.security.authorization.SingleResultAuthorizationManager.permitAll;
-
 @Configuration
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {

@@ -1,10 +1,10 @@
-package com.crus.customerWebsite.services;
+package com.crus.customerWebsite.security;
 
 import com.crus.customerWebsite.models.Book;
 import com.crus.customerWebsite.models.Customer;
+import com.crus.customerWebsite.models.Role;
 import com.crus.customerWebsite.repos.BookRepository;
 import com.crus.customerWebsite.repos.CustomerRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -59,7 +59,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                         bookRepository.findById(
                                 Long.parseLong(targetId.toString()));
                 if (book.isEmpty()) {
-                    // no recipe with id exists, return true so the method
+                    // no book with id exists, return true so the method
                     // can continue ultimately throwing an exception
                     return true;
                 }
@@ -76,11 +76,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     public boolean userIsAdmin(Authentication authentication) {
-        Collection<Customer> grantedAuthorities =
-                (Collection<Customer>) authentication.getAuthorities();
+        Collection<Role> grantedAuthorities =
+                (Collection<Role>) authentication.getAuthorities();
 
-        for (Customer c : grantedAuthorities) {
-            if (c.getAuthority().equals("ROLE_ADMIN")) {
+        for (Role r : grantedAuthorities) {
+            if (r.getAuthority().equals("ROLE_ADMIN")) {
                 return true;
             }
         }

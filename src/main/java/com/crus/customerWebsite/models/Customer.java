@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Builder
 @Getter
 @Setter
-public class Customer implements GrantedAuthority {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,21 +25,4 @@ public class Customer implements GrantedAuthority {
     @OneToOne(mappedBy = "customer")
     private Book book;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Roles role;
-
-    public Customer(Customer.Roles role) {
-        this.role = role;
-    }
-
-    @JsonIgnore
-    public String getAuthority() {
-        return role.name();
-    }
-
-    public enum Roles {
-        ROLE_USER,
-        ROLE_ADMIN
-    }
 }

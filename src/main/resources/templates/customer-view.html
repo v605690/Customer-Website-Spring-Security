@@ -1,10 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Customer Dashboard</title>
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Welcome, <span th:text="${customer.fullName}">Customer Name</span></h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                        <tr>
+                            <th scope="row">Full Name</th>
+                            <td th:text="${customer.fullName}">Full Name</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email Address</th>
+                            <td th:text="${customer.emailAddress}">Email Address</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Age</th>
+                            <td th:text="${customer.age}">Age</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Address</th>
+                            <td th:text="${customer.address}">Address</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Book</th>
+                            <td th:text="${customer.book}">Book</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex gap-2">
+                        <a th:href="@{'/edit/' + ${customer.id}}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{'/delete/' + ${customer.id}}" class="btn btn-danger btn-sm">Delete</a>
+                        <a th:if="${customer.book == null}" th:href="@{'/books/assign/' + ${customer.id}}" class="btn btn-success btn-sm">Assign Book</a>
+                        <a th:if="${customer.book != null}" th:href="@{'/remove/' + ${customer.id}}" class="btn btn-outline-secondary btn-sm">Remove Book</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example: Add a form for updating customer info -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Update Info</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/update}" th:object="${customer}" method="post">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" th:field="*{fullName}" class="form-control" id="fullName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailAddress" class="form-label">Email Address</label>
+                            <input type="email" th:field="*{emailAddress}" class="form-control" id="emailAddress" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" th:field="*{age}" class="form-control" id="age" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" th:field="*{address}" class="form-control" id="address">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a th:href="@{/logout}" class="btn btn-outline-dark">Log Out</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

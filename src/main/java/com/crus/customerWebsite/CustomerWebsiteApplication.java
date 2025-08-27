@@ -2,12 +2,17 @@ package com.crus.customerWebsite;
 
 import com.crus.customerWebsite.models.Book;
 import com.crus.customerWebsite.models.Customer;
+import com.crus.customerWebsite.models.Role;
+import com.crus.customerWebsite.models.User;
+import com.crus.customerWebsite.repos.RoleRepository;
+import com.crus.customerWebsite.repos.UserRepository;
 import com.crus.customerWebsite.services.BookService;
 import com.crus.customerWebsite.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +25,15 @@ public class CustomerWebsiteApplication implements CommandLineRunner {
 
 	@Autowired
 	private BookService bookService;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CustomerWebsiteApplication.class, args);
@@ -65,5 +79,32 @@ public class CustomerWebsiteApplication implements CommandLineRunner {
 						.isbn("978-0-439-02348-3")
 						.build()
         ));
+
+        if (roleRepository.count() == 0) {
+            Role userRole = Role.builder()
+                    .role(Role.Roles.ROLE_USER)
+                            .build();
+           Role adminRole =  Role.builder()
+                    .role(Role.Roles.ROLE_ADMIN)
+                            .build();
+            roleRepository.saveAll(Arrays.asList(userRole, adminRole));
+            System.out.println("Roles created");
+        }
+        if (userRepository.count() == 0) {
+            Role adminRole = roleRepository.findByRole(Role.Roles.ROLE_ADMIN);
+            User admin = User.builder()
+                    .username("admin")
+                    .password(encoder.encode("admin"))
+                    .authorities(Collections.singletonList(adminRole))
+                    .customer(Customer.builder()
+                            .fullName("Admin")
+                            .emailAddress("admin@gmail.com")
+                            .address("Admin Address")
+                            .age(30)
+                            .build())
+                    .build();
+        }
+
+
 	}
 }
