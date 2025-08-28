@@ -80,31 +80,46 @@ public class CustomerWebsiteApplication implements CommandLineRunner {
 						.build()
         ));
 
-        if (roleRepository.count() == 0) {
-            Role userRole = Role.builder()
-                    .role(Role.Roles.ROLE_USER)
-                            .build();
-           Role adminRole =  Role.builder()
-                    .role(Role.Roles.ROLE_ADMIN)
-                            .build();
-            roleRepository.saveAll(Arrays.asList(userRole, adminRole));
-            System.out.println("Roles created");
-        }
         if (userRepository.count() == 0) {
+            Role userRole = roleRepository.findByRole(Role.Roles.ROLE_USER);
+            if (userRole == null) {
+                userRole = Role.builder()
+                    .role(Role.Roles.ROLE_USER)
+                    .build();
+                userRole = roleRepository.saveAndFlush(userRole);
+            }
             Role adminRole = roleRepository.findByRole(Role.Roles.ROLE_ADMIN);
+            if (adminRole == null) {
+                adminRole = Role.builder()
+                    .role(Role.Roles.ROLE_ADMIN)
+                    .build();
+                adminRole = roleRepository.saveAndFlush(adminRole);
+            }
+
+            Customer adminCustomer = Customer.builder()
+                    .fullName("Admin")
+                    .emailAddress("admin@gmail.com")
+                    .address("Admin Address")
+                    .age(30)
+                    .build();
+            Customer savedAdminCustomer = customerService.saveCustomer(adminCustomer);
+
+            savedAdminCustomer = customerService.findById(savedAdminCustomer.getId());
+
+
             User admin = User.builder()
                     .username("admin")
                     .password(encoder.encode("admin"))
                     .authorities(Collections.singletonList(adminRole))
-                    .customer(Customer.builder()
-                            .fullName("Admin")
-                            .emailAddress("admin@gmail.com")
-                            .address("Admin Address")
-                            .age(30)
-                            .build())
+                    .customer(savedAdminCustomer)
                     .build();
+            User savedAdmin = userRepository.save(admin);
+
+            Role managedAdminRole = roleRepository.findByRole(Role.Roles.ROLE_ADMIN);
+            savedAdmin.setAuthorities(Collections.singletonList(managedAdminRole));
+            userRepository.save(savedAdmin);
+
+            System.out.println("Admin created");
         }
-
-
 	}
 }

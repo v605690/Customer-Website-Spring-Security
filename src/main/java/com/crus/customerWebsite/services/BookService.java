@@ -1,12 +1,12 @@
 package com.crus.customerWebsite.services;
 
 import com.crus.customerWebsite.models.Book;
-import com.crus.customerWebsite.models.Customer;
 import com.crus.customerWebsite.repos.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,5 +46,13 @@ public class BookService {
             book.setCustomer(null);
             saveBook(book);
         }
+    }
+
+    public List<Book> findBookByCustomerId(Long id) {
+        return Collections.singletonList(bookRepository.findByCustomerId(id));
+    }
+
+    public List<Book> getAssignedBooksByUsername(String username) {
+        return bookRepository.findByCustomerEmailAddress(username);
     }
 }

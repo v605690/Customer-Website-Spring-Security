@@ -21,7 +21,7 @@ public class Book {
     private String isbn;
 
     @OneToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
 
     @Override

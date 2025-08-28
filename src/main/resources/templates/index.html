@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
     <meta charset="UTF-8">
@@ -22,7 +22,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             text-align: center;
         }
-        a {
+        a, button {
             display: inline-block;
             margin-top: 20px;
             padding: 10px 24px;
@@ -32,16 +32,62 @@
             border-radius: 4px;
             transition: background 0.2s;
         }
-        a:hover {
+        a:hover, button:hover {
             background: #0056b3;
+        }
+        .logout-btn {
+            background: #dc3545;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        .dashboard-btn {
+            background: #28a745;
+        }
+        .dashboard-btn:hover {
+            background: #218838;
+        }
+        .welcome-section {
+            margin-bottom: 20px;
+        }
+        .auth-section {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <div class="welcome-section">
     <h1>Welcome!</h1>
     <p>We're glad to have you here.</p>
+</div>
+
+<div sec:authorize="!isAuthenticated()" class="auth-section">
+    <a href="@{/login}">Login</a>
     <a href="register.html">Register an Account</a>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+    <div class="welcome-section">
+        <p>Welcome, <span sec:authentication="name"></span>!</p>
+    </div>
+
+    <div class="auth-section">
+        <div sec:authorize="hasRole('ROLE_USER')">
+            <a href="@{/customer-view}" class="dashboard-btn">Customer View</a>
+        </div>
+
+        <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="@{/customer-list}" class="dashboard-btn">Customer List</a>
+        </div>
+
+        <a th:href="@{/books}">Book Repository</a>
+
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="logout-btn">Log out</button>
+        </form>
+    </div>
+</div>
 </div>
 </body>
 </html>

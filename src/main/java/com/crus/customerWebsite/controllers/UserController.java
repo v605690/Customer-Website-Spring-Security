@@ -1,37 +1,53 @@
 package com.crus.customerWebsite.controllers;
 
+import com.crus.customerWebsite.models.Customer;
 import com.crus.customerWebsite.models.User;
 import com.crus.customerWebsite.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/register")
-    public User showRegistrationForm(Authentication authentication) {
-        return (User) authentication.getPrincipal();
+    @PostMapping("/register")
+    public String registrationForm(@Valid @ModelAttribute("user") User user,
+                                   BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            System.out.println("Validation errors found");
+            bindingResult.getAllErrors().forEach(error ->
+                    System.out.println("Validation error: " + error.getDefaultMessage()));
+            return "register";
+        }
+        try {
+            userService.registerUser(user);
+            System.out.println("User registered successfully");
+            return "redirect:/login?registered=true";
+        } catch (IllegalStateException e) {
+            System.out.println("Error registering user: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("message", e.getMessage());
+            return "register";
+        } catch (Exception e) {
+            model.addAttribute("Unexpected error registering user: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("errormessage", "Registration failed: " + e.getMessage());
+            return "register";
+        }
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User userDetails) {
-        try {
-            return ResponseEntity.ok(
-                    userService.registerUser(userDetails));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
-        }
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
     }
 }

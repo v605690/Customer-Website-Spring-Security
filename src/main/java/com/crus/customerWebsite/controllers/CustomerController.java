@@ -1,20 +1,53 @@
 package com.crus.customerWebsite.controllers;
 
+import com.crus.customerWebsite.models.Book;
 import com.crus.customerWebsite.models.Customer;
+import com.crus.customerWebsite.models.User;
+import com.crus.customerWebsite.services.BookService;
 import com.crus.customerWebsite.services.CustomerService;
+import com.crus.customerWebsite.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final UserService userService;
+    private final BookService bookService;
+
+    @GetMapping("/customer-view")
+    public String showCustomerViewPage(Model model, Authentication authentication) {
+        String username = authentication.getName();
+
+        //User user = userService.findByUsername(username);
+
+        //List<Book> assignedBooks = bookService.findBookByCustomerId(user.getCustomer().getId());
+
+        List<Book> assignedBooks = bookService.getAssignedBooksByUsername(username);
+
+        if (assignedBooks.isEmpty()) {
+            assignedBooks = new ArrayList<>();
+        }
+
+       // model.addAttribute("user", user);
+        assignedBooks = assignedBooks.stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+
+        model.addAttribute("assignedBooks", assignedBooks);
+        return "customer-view";
+    }
 
     @GetMapping("/")
     public String ViewHomePage(Model model) {

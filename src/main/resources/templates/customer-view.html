@@ -1,88 +1,210 @@
+
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <title>Customer Dashboard</title>
     <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customer Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            color: #333;
+            font-size: 1.1em;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+        .table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        .home-btn {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .home-btn:hover {
+            background: #218838;
+        }
+        .no-data {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Customer Dashboard</h1>
+            <p>Welcome back, <span sec:authentication="name"></span>!</p>
+        </div>
+        <div>
+            <a th:href="@{/}" class="home-btn">Home</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        </div>
+    </div>
 
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Welcome, <span th:text="${customer.fullName}">Customer Name</span></h4>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered table-striped">
-                        <tbody>
-                        <tr>
-                            <th scope="row">Full Name</th>
-                            <td th:text="${customer.fullName}">Full Name</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Email Address</th>
-                            <td th:text="${customer.emailAddress}">Email Address</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Age</th>
-                            <td th:text="${customer.age}">Age</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Address</th>
-                            <td th:text="${customer.address}">Address</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Book</th>
-                            <td th:text="${customer.book}">Book</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div class="d-flex gap-2">
-                        <a th:href="@{'/edit/' + ${customer.id}}" class="btn btn-warning btn-sm">Edit</a>
-                        <a th:href="@{'/delete/' + ${customer.id}}" class="btn btn-danger btn-sm">Delete</a>
-                        <a th:if="${customer.book == null}" th:href="@{'/books/assign/' + ${customer.id}}" class="btn btn-success btn-sm">Assign Book</a>
-                        <a th:if="${customer.book != null}" th:href="@{'/remove/' + ${customer.id}}" class="btn btn-outline-secondary btn-sm">Remove Book</a>
-                    </div>
+    <!-- Personal Information Card -->
+    <div class="card">
+        <h3>Personal Information</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Username</div>
+                <div class="info-value" th:text="${user.username}">N/A</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Customer ID</div>
+                <div class="info-value" th:text="${user.customer.id}">N/A</div>
+            </div>
+            <div class="info-item" th:if="${user.customer.fullName}">
+                <div class="info-label">First Name</div>
+                <div class="info-value" th:text="${user.customer.fullName}">N/A</div>
+            </div>
+            <div class="info-item" th:if="${user.customer.emailAddress}">
+                <div class="info-label">Email</div>
+                <div class="info-value" th:text="${user.customer.emailAddress}">N/A</div>
+            </div>
+            <div class="info-item" th:if="${user.customer.address}">
+                <div class="info-label">Address</div>
+                <div class="info-value" th:text="${user.customer.address}">N/A</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Account Status</div>
+                <div class="info-value">
+                    <span th:if="${user.enabled}" style="color: #28a745;">Active</span>
+                    <span th:unless="${user.enabled}" style="color: #dc3545;">Inactive</span>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Example: Add a form for updating customer info -->
-            <div class="card">
-                <div class="card-header">
-                    <h5>Update Info</h5>
-                </div>
-                <div class="card-body">
-                    <form th:action="@{/update}" th:object="${customer}" method="post">
-                        <div class="mb-3">
-                            <label for="fullName" class="form-label">Full Name</label>
-                            <input type="text" th:field="*{fullName}" class="form-control" id="fullName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="emailAddress" class="form-label">Email Address</label>
-                            <input type="email" th:field="*{emailAddress}" class="form-control" id="emailAddress" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="age" class="form-label">Age</label>
-                            <input type="number" th:field="*{age}" class="form-control" id="age" min="0">
-                        </div>
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" th:field="*{address}" class="form-control" id="address">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </form>
+    <!-- Assigned Books Card -->
+    <div class="card">
+        <h3>My Assigned Books</h3>
+        <div th:if="${assignedBooks != null and not #lists.isEmpty(assignedBooks)}">
+            <span th:text="${assignedBooks[0].author}">Author Name</span>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Title</th>
+                    <th th:if="${assignedBooks[0].author}">Author</th>
+                    <th th:if="${assignedBooks[0].isbn}">ISBN</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${assignedBooks}">
+                    <td th:text="${book.id}">-</td>
+                    <td th:text="${book.title}">-</td>
+                    <td th:if="${book.author}" th:text="${book.author}">-</td>
+                    <td th:if="${book.isbn}" th:text="${book.isbn}">-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${#lists.isEmpty(assignedBooks)}" class="no-data">
+            <p>No books are currently assigned to you.</p>
+        </div>
+    </div>
+
+    <!-- User Roles Card -->
+    <div class="card">
+        <h3>Account Permissions</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">User Roles</div>
+                <div class="info-value">
+                    <span th:each="role, iterStat : ${user.authorities}"
+                          th:text="${role.authority} + ${!iterStat.last ? ', ' : ''}">N/A</span>
                 </div>
             </div>
-
-            <div class="mt-4">
-                <a th:href="@{/logout}" class="btn btn-outline-dark">Log Out</a>
-            </div>
-
         </div>
     </div>
 </div>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

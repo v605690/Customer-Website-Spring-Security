@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
     <meta charset="UTF-8">
@@ -8,31 +8,35 @@
 </head>
 <body>
 <h2>Register</h2>
-<form th:action="@{/register}" th:object="${user}" method="post">
+
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+<form action="#" th:action="@{/register}" th:object="${user}" method="post">
+
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        <ul>
+            <li th:each="error : ${#fields.errors('*')}" th:text="${error}">Error message</li>
+        </ul>
+    </div>
     <div>
         <label for="username">Username:</label>
         <input type="text" id="username" th:field="*{username}" required />
-    </div>
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}" required />
+        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></span>
     </div>
     <div>
         <label for="password">Password:</label>
         <input type="password" id="password" th:field="*{password}" required />
-    </div>
-    <div>
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required />
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></span>
     </div>
     <div>
         <button type="submit">Register</button>
     </div>
 </form>
-<div th:if="${#fields.hasErrors()}">
-    <ul>
-        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-    </ul>
+
+<div style="margin-top: 20px;">
+    <p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+    <p><a th:href="@{/}">Back to Home</a></p>
 </div>
+
 </body>
 </html>

@@ -44,10 +44,16 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean isEnabled = true;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Collection<Role> authorities = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.PERSIST, optional = false)
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
+
 }
