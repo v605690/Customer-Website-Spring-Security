@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="">
 <head>
     <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
     <meta charset="UTF-8">
@@ -8,9 +9,12 @@
 <body>
 <div align="center">
     <h1>Book List</h1>
-
     <a th:href="@{/new-book}">Add New Book</a>
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
     <a th:href="@{/customer-list}">Customer List</a>
+        </div>
+
     <a th:href="@{/}">Go back to Home</a>
 
     <br/><br/>

@@ -50,7 +50,7 @@ public class BookController {
         Book book = bookService.getBook(bookId);
         book.setCustomer(null);
         bookService.saveBook(book);
-        return "redirect:/";
+        return "redirect:/customer-list";
     }
 
     @GetMapping("/books/assign/{id}")

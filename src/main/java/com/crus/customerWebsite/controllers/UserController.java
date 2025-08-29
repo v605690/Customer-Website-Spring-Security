@@ -33,13 +33,9 @@ public class UserController {
             System.out.println("User registered successfully");
             return "redirect:/login?registered=true";
         } catch (IllegalStateException e) {
-            System.out.println("Error registering user: " + e.getMessage());
-            e.printStackTrace();
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
             return "register";
         } catch (Exception e) {
-            model.addAttribute("Unexpected error registering user: " + e.getMessage());
-            e.printStackTrace();
             model.addAttribute("errormessage", "Registration failed: " + e.getMessage());
             return "register";
         }

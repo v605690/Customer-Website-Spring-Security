@@ -150,6 +150,6 @@ public class CustomerController {
     public String deleteCustomer(@PathVariable(name = "id") Long id) {
 
         customerService.deleteCustomer(id);
-        return "redirect:/";
+        return "redirect:/customer-list";
     }
 }
