@@ -56,4 +56,24 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findById(Long id) {
         return customerRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public Customer findbyEmailAddress(String username) {
+        return customerRepository.findByEmailAddress(username);
+    }
+
+    @Override
+    public Customer findByAge(Integer age) {
+        return customerRepository.findByAge(age);
+    }
+
+    @Override
+    public Customer findByAddress(String address) {
+        return customerRepository.findByAddress(address);
+    }
+
+    @Override
+    public Customer findByFullName(String fullName) {
+        return customerRepository.findByFullName(fullName);
+    }
 }

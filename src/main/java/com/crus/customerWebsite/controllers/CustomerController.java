@@ -30,11 +30,14 @@ public class CustomerController {
     public String showCustomerViewPage(Model model, Authentication authentication) {
         String username = authentication.getName();
 
-        //User user = userService.findByUsername(username);
+        User user = userService.findByUsername(username);
+        Customer customer = user.getCustomer();
+
 
         //List<Book> assignedBooks = bookService.findBookByCustomerId(user.getCustomer().getId());
-
+        List<User> userList = userService.getAllUsers();
         List<Book> assignedBooks = bookService.getAssignedBooksByUsername(username);
+        List<Customer> customerList = customerService.getAllCustomers();
 
         if (assignedBooks.isEmpty()) {
             assignedBooks = new ArrayList<>();
@@ -45,17 +48,18 @@ public class CustomerController {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
+        model.addAttribute("userList", userList);
+        model.addAttribute("customerList", customerList);
         model.addAttribute("assignedBooks", assignedBooks);
+        model.addAttribute("user", user);
+
         return "customer-view";
     }
 
     @GetMapping("/")
     public String ViewHomePage(Model model) {
-//        final List<Customer> customerList = customerService.getAllCustomers();
-//
-//        model.addAttribute("customerList", customerList);
 
-        return "customer-list";
+        return "index";
     }
 
     @GetMapping("/customer-list")

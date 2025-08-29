@@ -17,4 +17,12 @@ public interface CustomerService {
     List<Customer> saveAllCustomer(List<Customer> customerList);
 
     Customer findById(Long id);
+
+    Customer findbyEmailAddress(String username);
+
+    Customer findByAge(Integer age);
+
+    Customer findByAddress(String address);
+
+    Customer findByFullName(String fullName);
 }

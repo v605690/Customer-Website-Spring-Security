@@ -10,14 +10,14 @@
     <h1>Book List</h1>
 
     <a th:href="@{/new-book}">Add New Book</a>
-    <a th:href="@{/}">Customer List</a>
+    <a th:href="@{/customer-list}">Customer List</a>
+    <a th:href="@{/}">Go back to Home</a>
 
     <br/><br/>
 
     <table border="1" cellpadding="10">
         <thead>
         <tr>
-
             <th>Book ID</th>
             <th>Title</th>
             <th>Author</th>
@@ -29,8 +29,7 @@
             <td th:text="${book.title}"></td>
             <td th:text="${book.author}"></td>
             <td th:text="${book.isbn}"></td>
-            // Not sure how to interpret below
-            <td th:text="${book.customer != null} ? ${book.customer.fullName}"></td>
+            <td th:text="${book.customer != null} ? book.customer.fullName : ''"></td>
         </tr>
         </tbody>
     </table>

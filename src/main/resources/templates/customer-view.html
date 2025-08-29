@@ -129,82 +129,64 @@
     </div>
 
     <!-- Personal Information Card -->
-    <div class="card">
-        <h3>Personal Information</h3>
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">Username</div>
-                <div class="info-value" th:text="${user.username}">N/A</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Customer ID</div>
-                <div class="info-value" th:text="${user.customer.id}">N/A</div>
-            </div>
-            <div class="info-item" th:if="${user.customer.fullName}">
-                <div class="info-label">First Name</div>
-                <div class="info-value" th:text="${user.customer.fullName}">N/A</div>
-            </div>
-            <div class="info-item" th:if="${user.customer.emailAddress}">
-                <div class="info-label">Email</div>
-                <div class="info-value" th:text="${user.customer.emailAddress}">N/A</div>
-            </div>
-            <div class="info-item" th:if="${user.customer.address}">
-                <div class="info-label">Address</div>
-                <div class="info-value" th:text="${user.customer.address}">N/A</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Account Status</div>
-                <div class="info-value">
-                    <span th:if="${user.enabled}" style="color: #28a745;">Active</span>
-                    <span th:unless="${user.enabled}" style="color: #dc3545;">Inactive</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <ul class="list-group mb-3">
+        <li class="list-group-item" th:each="customer : ${customerList}">
+            <strong>Name:</strong> <span th:text="${customer.fullName}">Customer Name</span><br>
+            <strong>Email:</strong> <span th:text="${customer.emailAddress}">Email Address</span><br>
+            <strong>Age:</strong> <span th:text="${customer.age}">Age</span><br>
+            <strong>Address:</strong> <span th:text="${customer.address}">Address</span>
+        </li>
+    </ul>
+    <div class="info-label">Account Status</div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <span th:if="${user.enabled}" style="color: #28a745;">Active</span>
+            <span th:unless="${user.enabled}" style="color: #dc3545;">Inactive</span>
+        </li>
+    </ul>
 
     <!-- Assigned Books Card -->
-    <div class="card">
-        <h3>My Assigned Books</h3>
-        <div th:if="${assignedBooks != null and not #lists.isEmpty(assignedBooks)}">
-            <span th:text="${assignedBooks[0].author}">Author Name</span>
+<!--    <div class="card">-->
+<!--        <h3>My Assigned Books</h3>-->
+<!--        <div th:if="${assignedBooks != null and not #lists.isEmpty(assignedBooks)}">-->
+<!--            <span th:text="${assignedBooks[0].author}">Author Name</span>-->
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Book ID</th>
-                    <th>Title</th>
-                    <th th:if="${assignedBooks[0].author}">Author</th>
-                    <th th:if="${assignedBooks[0].isbn}">ISBN</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="book : ${assignedBooks}">
-                    <td th:text="${book.id}">-</td>
-                    <td th:text="${book.title}">-</td>
-                    <td th:if="${book.author}" th:text="${book.author}">-</td>
-                    <td th:if="${book.isbn}" th:text="${book.isbn}">-</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div th:if="${#lists.isEmpty(assignedBooks)}" class="no-data">
-            <p>No books are currently assigned to you.</p>
-        </div>
-    </div>
+<!--            <table class="table">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Book ID</th>-->
+<!--                    <th>Title</th>-->
+<!--                    <th th:if="${assignedBooks[0].author}">Author</th>-->
+<!--                    <th th:if="${assignedBooks[0].isbn}">ISBN</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="book : ${assignedBooks}">-->
+<!--                    <td th:text="${book.title}">-</td>-->
+<!--                    <td th:if="${book.author}" th:text="${book.author}">-</td>-->
+<!--                    <td th:if="${book.isbn}" th:text="${book.isbn}">-</td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--        <div th:if="${#lists.isEmpty(assignedBooks)}" class="no-data">-->
+<!--            <p>No books are currently assigned to you.</p>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <!-- User Roles Card -->
-    <div class="card">
-        <h3>Account Permissions</h3>
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">User Roles</div>
-                <div class="info-value">
-                    <span th:each="role, iterStat : ${user.authorities}"
-                          th:text="${role.authority} + ${!iterStat.last ? ', ' : ''}">N/A</span>
-                </div>
-            </div>
-        </div>
-    </div>
+<!--    <div class="card">-->
+<!--        <h3>Account Permissions</h3>-->
+<!--        <div class="info-grid">-->
+<!--            <div class="info-item">-->
+<!--                <div class="info-label">User Roles</div>-->
+<!--                <div class="info-value">-->
+<!--                    <span th:each="role, iterStat : ${user.authorities}"-->
+<!--                          th:text="${role.authority} + ${!iterStat.last ? ', ' : ''}">N/A</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 </body>
 </html>

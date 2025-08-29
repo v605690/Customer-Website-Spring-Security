@@ -29,11 +29,9 @@ public class SecurityConfig {
                         .requestMatchers("/customer-list").hasRole("ADMIN")
                         .anyRequest().authenticated())
                         //.formLogin(Customizer.withDefaults());
-              .formLogin(form -> form
-                        .defaultSuccessUrl("/customer-view", true)
-                        .permitAll())
+              .formLogin(Customizer.withDefaults())
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout=true")
+                        .logoutSuccessUrl("/")
                         .permitAll());
 
         return http.build();

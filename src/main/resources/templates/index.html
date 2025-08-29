@@ -6,88 +6,50 @@
     <title>Welcome</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             background: #f4f4f4;
-            margin: 0;
-            padding: 0;
+            min-height: 100vh;
             display: flex;
-            height: 100vh;
             align-items: center;
             justify-content: center;
         }
-        .container {
+        .container-custom {
             background: #fff;
             padding: 40px 60px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        a, button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 24px;
-            background: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-        a:hover, button:hover {
-            background: #0056b3;
-        }
-        .logout-btn {
-            background: #dc3545;
-        }
-        .logout-btn:hover {
-            background: #c82333;
-        }
-        .dashboard-btn {
-            background: #28a745;
-        }
-        .dashboard-btn:hover {
-            background: #218838;
-        }
-        .welcome-section {
-            margin-bottom: 20px;
-        }
-        .auth-section {
-            margin-top: 20px;
+            min-width: 350px;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="welcome-section">
-    <h1>Welcome!</h1>
-    <p>We're glad to have you here.</p>
-</div>
-
-<div sec:authorize="!isAuthenticated()" class="auth-section">
-    <a href="@{/login}">Login</a>
-    <a href="register.html">Register an Account</a>
-</div>
-
-<div sec:authorize="isAuthenticated()">
-    <div class="welcome-section">
-        <p>Welcome, <span sec:authentication="name"></span>!</p>
+<div class="container-custom">
+    <div class="text-center mb-4">
+        <h1>Welcome!</h1>
+        <p>We're glad to have you here.</p>
     </div>
 
-    <div class="auth-section">
-        <div sec:authorize="hasRole('ROLE_USER')">
-            <a href="@{/customer-view}" class="dashboard-btn">Customer View</a>
-        </div>
-
-        <div sec:authorize="hasRole('ROLE_ADMIN')">
-            <a href="@{/customer-list}" class="dashboard-btn">Customer List</a>
-        </div>
-
-        <a th:href="@{/books}">Book Repository</a>
-
-        <form th:action="@{/logout}" method="post" style="display: inline;">
-            <button type="submit" class="logout-btn">Log out</button>
-        </form>
+    <div sec:authorize="!isAuthenticated()" class="d-flex flex-column align-items-center mb-3">
+        <a th:href="@{/login}" class="btn btn-primary mb-2 w-100">Login</a>
+        <a href="register.html" class="btn btn-outline-primary w-100">Register an Account</a>
     </div>
-</div>
+
+    <div sec:authorize="isAuthenticated()">
+        <div class="text-center mb-3">
+            <p>Welcome, <span sec:authentication="name"></span>!</p>
+        </div>
+        <div class="d-flex flex-column gap-2 mb-3">
+            <div sec:authorize="hasRole('ROLE_USER')">
+                <a th:href="@{/customer-view}" class="btn btn-success w-100">Customer View</a>
+            </div>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:href="@{/customer-list}" class="btn btn-success w-100">Customer List</a>
+            </div>
+            <a th:href="@{/books}" class="btn btn-primary w-100">Book Repository</a>
+            <form th:action="@{/logout}" method="post" class="w-100">
+                <button type="submit" class="btn btn-danger w-100">Log out</button>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>
