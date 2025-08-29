@@ -67,6 +67,6 @@ public class BookController {
         Book book = bookService.getBook(bookId);
         book.setCustomer(customerService.getCustomer(customerId));
         bookService.saveBook(book);
-        return "redirect:/";
+        return "redirect:/customer-list";
     }
 }

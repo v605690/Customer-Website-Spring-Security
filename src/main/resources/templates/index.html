@@ -30,7 +30,7 @@
 
     <div sec:authorize="!isAuthenticated()" class="d-flex flex-column align-items-center mb-3">
         <a th:href="@{/login}" class="btn btn-primary mb-2 w-100">Login</a>
-        <a href="register.html" class="btn btn-outline-primary w-100">Register an Account</a>
+        <a th:href="@{/register}" class="btn btn-outline-primary w-100">Register an Account</a>
     </div>
 
     <div sec:authorize="isAuthenticated()">

@@ -100,7 +100,7 @@ public class CustomerController {
         }
 
         customerService.saveCustomer(customer);
-        return "redirect:/";
+        return "redirect:/customer-list";
     }
 
     @GetMapping("/edit/{id}")
@@ -131,6 +131,26 @@ public class CustomerController {
         return mav;
     }
 
+//    @GetMapping("/edit/{id}")
+//    public String showEditCustomerPage(@PathVariable(name = "id") Long id, Model model) {
+//        Customer customer = customerService.getCustomer(id);
+//
+//        if (customer == null) {
+//            // Add a message to the model for the error page
+//            model.addAttribute("message", "Customer with ID " + id + " not found");
+//            return "error";
+//        }
+//        if (!id.equals(customer.getId())) {
+//            // Add a message to the model for the error page
+//            model.addAttribute("message", "ID mismatch: URL ID " + id +
+//                    " does not match customer ID " + customer.getId());
+//            return "error";
+//        }
+//
+//        model.addAttribute("customer", customer);
+//        return "redirect:/customer-list";
+//    }
+
     @PostMapping("/update/{id}")
     public String updateCustomer(@PathVariable(name = "id") Long id,
                                  @ModelAttribute("customer") Customer customer, Model  model) {
@@ -143,7 +163,7 @@ public class CustomerController {
         }
 
         customerService.saveCustomer((customer));
-        return "redirect:/";
+        return "redirect:/customer-list";
     }
 
     @RequestMapping("/delete/{id}")

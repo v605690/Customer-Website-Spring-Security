@@ -31,7 +31,7 @@ public class UserController {
         try {
             userService.registerUser(user);
             System.out.println("User registered successfully");
-            return "redirect:/login?registered=true";
+            return "redirect:/login";
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "register";
