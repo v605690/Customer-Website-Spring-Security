@@ -33,25 +33,8 @@ public class CustomerController {
         User user = userService.findByUsername(username);
         Customer customer = user.getCustomer();
 
-
-        //List<Book> assignedBooks = bookService.findBookByCustomerId(user.getCustomer().getId());
-        List<User> userList = userService.getAllUsers();
-        List<Book> assignedBooks = bookService.getAssignedBooksByUsername(username);
-        List<Customer> customerList = customerService.getAllCustomers();
-
-        if (assignedBooks.isEmpty()) {
-            assignedBooks = new ArrayList<>();
-        }
-
-       // model.addAttribute("user", user);
-        assignedBooks = assignedBooks.stream()
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-
-        model.addAttribute("userList", userList);
-        model.addAttribute("customerList", customerList);
-        model.addAttribute("assignedBooks", assignedBooks);
         model.addAttribute("user", user);
+        model.addAttribute("customer", customer);
 
         return "customer-view";
     }

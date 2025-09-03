@@ -129,14 +129,16 @@
     </div>
 
     <!-- Personal Information Card -->
-    <ul class="list-group mb-3">
-        <li class="list-group-item" th:each="customer : ${customerList}">
+<!--    <ul class="list-group mb-3">-->
+<!--        <li class="list-group-item" th:each="customer : ${customerList}">-->
+    <div>
             <strong>Name:</strong> <span th:text="${customer.fullName}">Customer Name</span><br>
             <strong>Email:</strong> <span th:text="${customer.emailAddress}">Email Address</span><br>
             <strong>Age:</strong> <span th:text="${customer.age}">Age</span><br>
             <strong>Address:</strong> <span th:text="${customer.address}">Address</span>
-        </li>
-    </ul>
+<!--        </li>-->
+<!--    </ul>-->
+    </div>
     <div class="info-label">Account Status</div>
     <ul class="list-group">
         <li class="list-group-item">
