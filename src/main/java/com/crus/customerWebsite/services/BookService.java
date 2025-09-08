@@ -60,7 +60,7 @@ public class BookService {
         return Collections.singletonList(bookRepository.findByCustomerId(id));
     }
 
-    // Returning a book list assigned by a username
+        // Return a book list assigned by a username
     public List<Book> getAssignedBooksByUsername(String username) {
         // getting a user
         User user = userRepository.findByUsername(username);
