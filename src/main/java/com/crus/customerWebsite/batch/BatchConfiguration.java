@@ -19,7 +19,6 @@ import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.json.JsonWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -94,7 +93,7 @@ public class BatchConfiguration {
                 .name("csv-reader")
                 .resource(new ClassPathResource(inputFile))
                 .delimited()
-                .names("id", "name", "designation")
+                .names("id", "full_name", "email_address", "age", "address")
                 .linesToSkip(1)
                 .fieldSetMapper(
                         new BeanWrapperFieldSetMapper<>() {
@@ -123,9 +122,9 @@ public class BatchConfiguration {
         // process the name of the employee
         @Override
         public Customer process(Customer customer) {
-            customer.setFullName();
             customer.setFullName(customer.getFullName().toUpperCase());
-            customer.setNameUpdatedAt(new Date());
+            customer.setFullName(customer.getFullName().toUpperCase());
+            customer.setProcessedData(new Date());
             return customer;
         }
     }
@@ -134,13 +133,12 @@ public class BatchConfiguration {
     public static class DesignationProcessor implements
             ItemProcessor<Customer, Customer> {
 
-        // converts the designations into the enum you defined earlier
+        // validation check
         @Override
         public Customer process(Customer  customer) {
-            customer.setDesignation(
-                    Designation.getByCode(
-                            customer.getDesignation()).getTitle());
-            customer.setDesignationUpdatedAt(new Date());
+            if (customer.getFullName() == null || customer.getFullName().isEmpty()) {
+                throw new IllegalArgumentException("Full name is missing for customer: " + customer.getId());
+            }
             return customer;
         }
     }

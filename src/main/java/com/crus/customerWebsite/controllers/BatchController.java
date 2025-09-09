@@ -1,5 +1,6 @@
 package com.crus.customerWebsite.controllers;
 
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -23,7 +24,7 @@ public class BatchController {
     private JobLauncher jobLauncher;
 
     @Autowired
-    private BatchProperties.Job job;
+    private Job job;
 
     @GetMapping(value = "/job")
     public String testJob(@RequestParam(name = "id") String jobId) {

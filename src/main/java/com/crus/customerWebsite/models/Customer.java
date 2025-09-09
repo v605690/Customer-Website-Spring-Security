@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Date;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class Customer {
     private String emailAddress;
     private Integer age;
     private String address;
+    private Date processedData;
 
     @OneToOne(mappedBy = "customer")
     private Book book;
