@@ -3,11 +3,13 @@ package com.crus.customerWebsite.services;
 import com.crus.customerWebsite.models.Customer;
 import com.crus.customerWebsite.repos.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -49,7 +51,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public List<Customer> saveAllCustomer(List<Customer> customerList) {
+        try {
         return customerRepository.saveAll(customerList);
+        } catch (Exception e) {
+            log.error("Failed to save customers: {}", e.getMessage());
+            throw new RuntimeException("Could not save customers", e);
+        }
     }
 
     @Override

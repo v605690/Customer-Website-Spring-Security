@@ -24,10 +24,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -61,6 +64,13 @@ public class BatchConfiguration {
                 .reader(csvReader)
                 .processor(processor)
                 .writer(writer)
+                .faultTolerant()
+                .retryLimit(3)
+                .retry(ObjectOptimisticLockingFailureException.class)
+                .skipLimit(50)
+                .skip(IllegalArgumentException.class)
+                .skip(org.springframework.batch.item.validator.ValidationException.class)
+                .noRetry(IllegalArgumentException.class)
                 .build();
     }
 
@@ -79,8 +89,11 @@ public class BatchConfiguration {
                 .processor(processor)
                 .writer(writer)
                 .faultTolerant()
-                .skipLimit(10)
-                .skip(Exception.class)
+                .retryLimit(3)
+                .retry(ObjectOptimisticLockingFailureException.class)
+                .skipLimit(50)
+                .skip(IllegalArgumentException.class)
+                .noRetry(IllegalArgumentException.class)
                 .build();
     }
 
@@ -93,7 +106,7 @@ public class BatchConfiguration {
                 .name("csv-reader")
                 .resource(new ClassPathResource(inputFile))
                 .delimited()
-                .names("id", "full_name", "email_address", "age", "address")
+                .names("id", "fullName", "emailAddress", "age", "address")
                 .linesToSkip(1)
                 .fieldSetMapper(
                         new BeanWrapperFieldSetMapper<>() {
@@ -123,7 +136,6 @@ public class BatchConfiguration {
         @Override
         public Customer process(Customer customer) {
             customer.setFullName(customer.getFullName().toUpperCase());
-            customer.setFullName(customer.getFullName().toUpperCase());
             customer.setProcessedData(new Date());
             return customer;
         }
@@ -152,14 +164,53 @@ public class BatchConfiguration {
 
         @Value("${sleepTime}")
         private Integer SLEEP_TIME;
-
         @Override
-        public void write(@NonNull Chunk<? extends Customer> customer)
+        public void write(@NonNull Chunk<? extends Customer> chunk)
                 throws InterruptedException {
 
-            customerRepository.saveAll(customer);
+            List<Customer> customersToSave = new ArrayList<>();
+
+            chunk.getItems().forEach(customer -> {
+                if (customer.getId() != null) {
+                    // For existing entities, find the current version and update
+                    Customer existingCustomer = customerRepository.findById(customer.getId()).orElse(null);
+                    if (existingCustomer != null) {
+                        // Update existing entity with new values
+                        existingCustomer.setFullName(customer.getFullName());
+                        existingCustomer.setEmailAddress(customer.getEmailAddress());
+                        existingCustomer.setAge(customer.getAge());
+                        existingCustomer.setAddress(customer.getAddress());
+                        existingCustomer.setProcessedData(customer.getProcessedData());
+                        customersToSave.add(existingCustomer);
+                    } else {
+                        // Entity doesn't exist in DB, create new customer
+                        Customer newCustomer = Customer.builder()
+                                .fullName(customer.getFullName())
+                                .emailAddress(customer.getEmailAddress())
+                                .age(customer.getAge())
+                                .address(customer.getAddress())
+                                .processedData(customer.getProcessedData())
+                                .build();
+                        customersToSave.add(newCustomer);
+                    }
+                } else {
+                    Customer newCustomer = Customer.builder()
+                            .fullName(customer.getFullName())
+                            .emailAddress(customer.getEmailAddress())
+                            .age(customer.getAge())
+                            .address(customer.getAddress())
+                            .processedData(customer.getProcessedData())
+                            .build();
+                    customersToSave.add(newCustomer);
+                }
+            });
+
+            customerRepository.saveAll(customersToSave);
+
+            if (SLEEP_TIME != null && SLEEP_TIME > 0) {
             Thread.sleep(SLEEP_TIME);
-            System.out.println("Saved customers: " + customer);
+            }
+            System.out.println("Saved customers: " + customersToSave);
         }
     }
 }
