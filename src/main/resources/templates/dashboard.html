@@ -1,6 +1,7 @@
 <!-- src/main/resources/templates/dashboard.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
 <head>
     <meta charset="UTF-8">
     <title>Job Dashboard</title>
@@ -26,7 +27,12 @@
             <label for="jobId">Optional Job ID:</label>
             <input type="text" id="jobId" name="jobId" placeholder="Leave blank for auto-generated ID"/>
         </div>
-        <button type="submit" class="start-button">Start Batch Job</button>
+
+        <div style="text-align: center;">
+            <button type="submit" style="width: 150px; height: 40px; margin-right: 10px;">Start Batch Job</button>
+            <button type="button" onclick="window.location.href = '/'" style="width: 150px; height: 40px;">Go Back to Home</button>
+        </div>
+
     </form>
     <div th:if="${jobStatus}">
         <p>Job Status: <span th:text="${jobStatus}"></span></p>
@@ -35,6 +41,7 @@
         <p style="color:red;">Error: <span th:text="${errorMessage}"></span></p>
     </div>
     <h2 style="margin-top: 30px;">Job Execution History</h2>
+
     <table class="job-history-table">
         <thead>
         <tr>

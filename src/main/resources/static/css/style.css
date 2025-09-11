@@ -1,0 +1,18 @@
+.job-history-table {
+    border-collapse: collapse; /* Merges adjacent borders into a single line */
+    width: 100%; /* Makes the table take up the full width */
+}
+
+/* Apply a border to all table cells and headers */
+.job-history-table,
+.job-history-table th,
+.job-history-table td {
+    border: 1px solid #ddd; /* A light grey border */
+    padding: 8px; /* Adds some spacing inside the cells */
+}
+
+/* Optional: Style the table header for distinction */
+.job-history-table thead th {
+    background-color: #f2f2f2; /* A light grey background */
+    text-align: left; /* Aligns the text to the left */
+}

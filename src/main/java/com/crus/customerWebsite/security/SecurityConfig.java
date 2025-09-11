@@ -27,6 +27,8 @@ public class SecurityConfig {
                         .requestMatchers("/login/**","/register", "/register/**").permitAll()
                         .requestMatchers("/customer-view").hasRole("USER")
                         .requestMatchers("/customer-list").hasRole("ADMIN")
+                        .requestMatchers("/batch").hasRole("ADMIN")
+                        .requestMatchers("/batch/start-job").hasRole("ADMIN")
                         .anyRequest().authenticated())
                         //.formLogin(Customizer.withDefaults());
               .formLogin(Customizer.withDefaults())
