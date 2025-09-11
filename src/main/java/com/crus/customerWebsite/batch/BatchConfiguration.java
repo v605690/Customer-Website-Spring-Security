@@ -74,28 +74,28 @@ public class BatchConfiguration {
                 .build();
     }
 
-    @Bean
-    public Step designationStep(
-            JobRepository jobRepository,
-            ItemReader<Customer> repositoryReader,
-            DesignationProcessor processor,
-            CustomerWriter writer,
-            PlatformTransactionManager transactionManager) {
-
-        // this step converts the designation into matching enum
-        return new StepBuilder("designation-step", jobRepository)
-                .<Customer, Customer>chunk(100, transactionManager)
-                .reader(repositoryReader)
-                .processor(processor)
-                .writer(writer)
-                .faultTolerant()
-                .retryLimit(3)
-                .retry(ObjectOptimisticLockingFailureException.class)
-                .skipLimit(50)
-                .skip(IllegalArgumentException.class)
-                .noRetry(IllegalArgumentException.class)
-                .build();
-    }
+//    @Bean
+//    public Step designationStep(
+//            JobRepository jobRepository,
+//            ItemReader<Customer> repositoryReader,
+//            DesignationProcessor processor,
+//            CustomerWriter writer,
+//            PlatformTransactionManager transactionManager) {
+//
+//        // this step converts the designation into matching enum
+//        return new StepBuilder("designation-step", jobRepository)
+//                .<Customer, Customer>chunk(100, transactionManager)
+//                .reader(repositoryReader)
+//                .processor(processor)
+//                .writer(writer)
+//                .faultTolerant()
+//                .retryLimit(3)
+//                .retry(ObjectOptimisticLockingFailureException.class)
+//                .skipLimit(50)
+//                .skip(IllegalArgumentException.class)
+//                .noRetry(IllegalArgumentException.class)
+//                .build();
+//    }
 
     // ItemReaders for this job
     @Bean

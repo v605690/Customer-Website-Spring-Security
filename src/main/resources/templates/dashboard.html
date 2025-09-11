@@ -1,0 +1,58 @@
+<!-- src/main/resources/templates/dashboard.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
+        .dashboard-container { text-align: center; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        h1 { color: #333; }
+        .message { margin-top: 20px; font-weight: bold; color: #555; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { width: 80%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .start-button { background-color: #007bff; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 5px; transition: background-color 0.3s ease; }
+        .start-button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <h1>Batch Job Dashboard</h1>
+    <p class="message" th:text="${message}"></p>
+
+    <form th:action="@{/batch/start-job}" method="post">
+        <div class="form-group">
+            <label for="jobId">Optional Job ID:</label>
+            <input type="text" id="jobId" name="jobId" placeholder="Leave blank for auto-generated ID"/>
+        </div>
+        <button type="submit" class="start-button">Start Batch Job</button>
+    </form>
+    <div th:if="${jobStatus}">
+        <p>Job Status: <span th:text="${jobStatus}"></span></p>
+    </div>
+    <div th:if="${errorMessage}">
+        <p style="color:red;">Error: <span th:text="${errorMessage}"></span></p>
+    </div>
+    <h2 style="margin-top: 30px;">Job Execution History</h2>
+    <table class="job-history-table">
+        <thead>
+        <tr>
+            <th>Execution ID</th>
+            <th>Status</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="jobExecution : ${lastJobExecutions}">
+            <td th:text="${jobExecution.id}">123</td>
+            <td th:text="${jobExecution.status}">COMPLETED</td>
+            <td th:text="${#temporals.format(jobExecution.createTime, 'dd-MMM-yyyy HH:mm:ss')}">2025-09-10 10:00:00</td>
+            <td th:text="${#temporals.format(jobExecution.endTime, 'dd-MMM-yyyy HH:mm:ss')}">2025-09-10 10:05:00</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
