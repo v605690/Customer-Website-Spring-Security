@@ -45,6 +45,8 @@
     <table class="job-history-table">
         <thead>
         <tr>
+
+            <th>Job Name</th>
             <th>Execution ID</th>
             <th>Status</th>
             <th>Start Time</th>
@@ -53,6 +55,7 @@
         </thead>
         <tbody>
         <tr th:each="jobExecution : ${lastJobExecutions}">
+            <td th:text="${jobExecution.getJobInstance().getJobName()}"></td>
             <td th:text="${jobExecution.id}">123</td>
             <td th:text="${jobExecution.status}">COMPLETED</td>
             <td th:text="${#temporals.format(jobExecution.createTime, 'dd-MMM-yyyy HH:mm:ss')}">2025-09-10 10:00:00</td>
