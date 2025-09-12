@@ -48,18 +48,21 @@
 
             <th>Job Name</th>
             <th>Execution ID</th>
-            <th>Status</th>
             <th>Start Time</th>
             <th>End Time</th>
+            <th>Status</th>
+            <th>Exit Status</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="jobExecution : ${lastJobExecutions}">
             <td th:text="${jobExecution.getJobInstance().getJobName()}"></td>
             <td th:text="${jobExecution.id}">123</td>
-            <td th:text="${jobExecution.status}">COMPLETED</td>
             <td th:text="${#temporals.format(jobExecution.createTime, 'dd-MMM-yyyy HH:mm:ss')}">2025-09-10 10:00:00</td>
             <td th:text="${#temporals.format(jobExecution.endTime, 'dd-MMM-yyyy HH:mm:ss')}">2025-09-10 10:05:00</td>
+            <td th:text="${jobExecution.status}"></td>
+            <td th:text="${jobExecution.getExitStatus().getExitCode()}"></td>
+
         </tr>
         </tbody>
     </table>
