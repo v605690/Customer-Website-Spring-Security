@@ -193,15 +193,6 @@ public class BatchConfiguration {
                                 .build();
                         customersToSave.add(newCustomer);
                     }
-                } else {
-                    Customer newCustomer = Customer.builder()
-                            .fullName(customer.getFullName())
-                            .emailAddress(customer.getEmailAddress())
-                            .age(customer.getAge())
-                            .address(customer.getAddress())
-                            .processedData(customer.getProcessedData())
-                            .build();
-                    customersToSave.add(newCustomer);
                 }
             });
 
